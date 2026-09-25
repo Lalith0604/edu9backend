@@ -14,13 +14,10 @@ def search_colleges(request):
 
     search_query = request.GET.get("search", "").strip()
 
-    if not search_query:
-        return JsonResponse({
-            "message": "Please enter a college name"
-        })
+    query = {}
 
-    colleges = colleges_collection.find({
-        "$or": [
+    if search_query:
+        query["$or"] = [
             {
                 "college_name": {
                     "$regex": search_query,
@@ -34,7 +31,8 @@ def search_colleges(request):
                 }
             }
         ]
-    })
+
+    colleges = colleges_collection.find(query)
 
     results = []
 
@@ -42,10 +40,13 @@ def search_colleges(request):
         results.append({
             "id": str(college["_id"]),
             "college_name": college.get("college_name"),
+            "college_short_name": college.get("college_short_name"),
             "state": college.get("state"),
             "city": college.get("city"),
             "college_type": college.get("college_type"),
-            "institute_code": college.get("institute_code")
+            "institute_code": college.get("institute_code"),
+            "nirf_ranking": college.get("nirf_ranking"),
+            "is_active": college.get("is_active", True)
         })
 
     return JsonResponse({
