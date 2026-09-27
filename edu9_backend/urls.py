@@ -17,6 +17,12 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
+from colleges.courses import( add_course, 
+        get_college_courses,
+         update_course,
+          deactivate_course )
+
+
 from colleges.views import (
     search_colleges,
     college_details,
@@ -49,4 +55,25 @@ urlpatterns = [
         "api/colleges/<str:college_id>/",
         college_details
     ),
+
+    path(
+    "api/courses/add/",
+    add_course
+),
+
+path(
+    "api/courses/college/<str:college_id>/",
+    get_college_courses
+),
+
+path(
+    "api/courses/<str:course_id>/update/",
+    update_course
+),
+
+path(
+    "api/courses/<str:course_id>/deactivate/",
+    deactivate_course
+),
+
 ]
